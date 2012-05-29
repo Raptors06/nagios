@@ -6,15 +6,15 @@
 # Author: Richard J. Breiten												   #
 #		rbreiten@oplib.org													   #
 #		Ouachita Parish Public Library										   #
-# Updated 2011-09-02														   #
+# Updated 2012-05-29														   #
 ################################################################################
-# Rev: 0.0.8				    											   #
+# Rev: 0.1.1				    											   #
 ################################################################################
 #																			   #
 # Todo list																	   #
 # - upgrade process															   #
 # -- Make sure all installations work and run without any issue				   #
-# -- 																		   #
+# -- Look at adding in for MRTG install to keep files locally				   #
 # -- Look at snmpwalk line...												   #
 # -- Look at NagiosQL installation											   #
 # -- Look at NConf installation												   #
@@ -53,7 +53,7 @@ yum -y install httpd
 # PHP and PHP web admin
 yum -y install php php-gd php-mysql php-pear
 pear channel-update pear.php.net
-pear config-set http_proxy http://my_proxy.com:port
+#pear config-set http_proxy http://my_proxy.com:port #IF USING A PROXY!!
 pear upgrade-all
 yum -y install php-ldap php-xml php-mbstring php-snmp
 yum -y install phpmyadmin
@@ -71,9 +71,9 @@ yum -y install perl-Net-SSLeay perl-Crypt-DES perl-Digest-SHA1 perl-Digest-HMAC 
 yum -y install perl-DBI perl-DBD-MySQL perl-Config-IniFiles perl-rrdtool
 
 cd /usr/src
-# Webmin 1.550 -- Updated 2011-04-26
-wget http://sourceforge.net/projects/webadmin/files/webmin/1.550/webmin-1.550-1.noarch.rpm
-rpm -i webmin-1.550-1.noarch.rpm
+# Webmin 1.580 -- Updated 2012-01-22
+wget http://sourceforge.net/projects/webadmin/files/webmin/1.580/webmin-1.580-1.noarch.rpm
+rpm -i webmin-1.580-1.noarch.rpm
 
 # NMap
 yum -y install nmap
@@ -91,9 +91,9 @@ chkconfig snmpd on
 #########################################
 # -- Beginning of Nagios Installation-- #
 #########################################
-useradd -m nagios
-passwd nagios
-groupadd nagmon
+# useradd -m nagios
+# passwd nagios
+# groupadd nagmon
 # /usr/sbin/usermod -L nagios
 # /usr/sbin/groupadd nagcmd
 # /usr/sbin/usermod -G nagios,nagcmd nagios
@@ -105,13 +105,15 @@ groupadd nagmon
 #usermod -a -G nagmon nagios
 #usermod -a -G nagmon apache
 
-# Nagios 3.3.1 -- Package last updated 2011-07-26
+# Nagios 3.4.1 -- Package last updated 2011-05-14
+#Maybe just use yum install nagios??? Would this be advisable? Will have to see - FAN uses a different mirror...
+
 # mkdir /opt/Nagios
 # cd /opt/Nagios
 cd /opt/
-wget http://sourceforge.net/projects/nagios/files/nagios-3.x/nagios-3.3.1/nagios-3.3.1.tar.gz
-tar xzvf nagios-3.3.1.tar.gz
-mv /opt/nagios-3.3.1/ /opt/nagios/
+wget http://sourceforge.net/projects/nagios/files/nagios-3.x/nagios-3.4.1/nagios-3.4.1.tar.gz
+tar xzvf nagios-3.4.1.tar.gz
+mv /opt/nagios-3.4.1/ /opt/nagios/
 cd nagios
 ./configure --with-command-group=nagmon --enable-nanosleep --enable-event-broker
 make all
@@ -139,23 +141,22 @@ cd nagios-plugins
 make
 make install
 
-# Plugin #2 - NRPE
+# Plugin #2 - NRPE 2.13 -- Package last updated 2011-11-11
 #	Package last updated 
 cd /opt/
-wget http://sourceforge.net/projects/nagios/files/nrpe-2.x/nrpe-2.12/nrpe-2.12.tar.gz
-tar xvf nrpe-2.12.tar.gz
-mv /opt/nrpe-2.12/ /opt/nrpe/
+wget http://sourceforge.net/projects/nagios/files/nrpe-2.x/nrpe-2.13/nrpe-2.13.tar.gz
+tar xvf nrpe-2.13.tar.gz
+mv /opt/nrpe-2.13/ /opt/nrpe/
 cd nrpe
 ./configure --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib
 make all
 make install-plugin
 
-# Plugin #3 - NSCA
-#	Package last updated 2007-07-03
+# Plugin #3 - NSCA 2.9.1 -- Package last updated 2007-07-03
 cd /opt/
-wget http://sourceforge.net/projects/nagios/files/nsca-2.x/nsca-2.7.2/nsca-2.7.2.tar.gz
-tar xvf nsca-2.7.2.tar.gz
-mv /opt/nsca-2.7.2/ /opt/nsca
+wget http://sourceforge.net/projects/nagios/files/nsca-2.x/nsca-2.9.1/nsca-2.9.1.tar.gz
+tar xvf nsca-2.9.1.tar.gz
+mv /opt/nsca-2.9.1/ /opt/nsca
 cd nsca
 #./configure
 #make all
@@ -165,16 +166,17 @@ cd nsca
 ######################################
 # ---Nagios NDOUtils Installation--- #
 ######################################
-# Package last updated 2009-10-27
+# Package last updated 2012-05-17
 cd /opt/
-wget http://prdownloads.sourceforge.net/sourceforge/nagios/ndoutils-1.4b9.tar.gz
-tar xzf ndoutils-1.4b9.tar.gz
-mv /opt/ndoutils-1.4b9/ /opt/ndoutils
+wget http://prdownloads.sourceforge.net/sourceforge/nagios/ndoutils-1.5.1.tar.gz
+tar xzf ndoutils-1.5.1.tar.gz
+mv /opt/ndoutils-1.5.1/ /opt/ndoutils
 cd ndoutils
-less README
-wget http://svn.centreon.com/trunk/ndoutils-patch/ndoutils1.4b9_light.patch
-patch -p1 -N < ndoutils1.4b9_light.patch
-less README
+#!!!WILL NEED TO CHECK SINCE VERSION HAS INCREMENTED!!!
+#less README
+#wget http://svn.centreon.com/trunk/ndoutils-patch/ndoutils1.4b9_light.patch
+#patch -p1 -N < ndoutils1.4b9_light.patch
+#less README
 ./configure --prefix=/opt/nagios/ --enable-mysql --disable-pgsql \ --with-ndo2db-user=nagios --with-ndo2db-group=nagios
 make
 cp ./src/ndomod-3x.o /opt/nagios/bin/ndomod.o
@@ -192,11 +194,11 @@ chkconfig --add ndo2db
 # ---Nagios Configuration Utilties--- #
 #######################################
 # Uncomment the lines for the desired Nagios configuration utility
-# Option 1 - Centreon 2.2.2 - Package last updated 2011-07-08
+# Option 1 - Centreon 2.3.8 -- Package last updated 2012-05-10
 #cd /opt
-#wget http://download.centreon.com/centreon/centreon-2.2.2.tar.gz
-#tar xzf centreon-2.2.2.tar.gz
-#mv /opt/centreon-2.2.2 /opt/centreon
+#wget http://download.centreon.com/centreon/centreon-2.3.8.tar.gz
+#tar xzf centreon-2.3.8.tar.gz
+#mv /opt/centreon-2.3.8 /opt/centreon
 #cd centreon
 #export PATH="$PATH:/usr/opt/nagios/bin/"
 #./install.sh -i
@@ -205,20 +207,21 @@ chkconfig --add ndo2db
 #    Traps process.  Additionally, locations of directories, etc, will
 #    need to be input, beginning with the Centreon Web interface.
 
-# Option 2 - NagiosQL 3.1.1 - Package last updated 2011-04-11
+# Option 2 - NagiosQL 3.2.0 -- Package last updated 2012-04-26
 #pear install HTML_Template_IT
 #cd /opt
-#wget http://sourceforge.net/projects/nagiosql/files/nagiosql/NagiosQL 3.1.1/nagiosql_311.tar.gz
-#tar xzf nagiosql_311.tar.gz
-#mv /opt/nagiosql_311 /opt/nagiosql
-#cd nagiosql
+#wget http://sourceforge.net/projects/nagiosql/files/nagiosql/NagiosQL 3.2.0/nagiosql_320.tar.gz
+#tar xzf nagiosql_320.tar.gz
+#mv /opt/nagiosql_320 /var/www/nagiosql
+#cd /var/www/nagiosql
 # No clue after this - will have to actually run an installation to see...
+#service httpd reload
 
-# Option 3 - NConf 1.2.6-0 - Package last updated 2009-11-25
+# Option 3 - NConf 1.3.0-0 -- Package last updated 2011-12-11
 #cd /opt
-#wget http://sourceforge.net/projects/nconf/files/nconf/1.2.6-0/nconf-1.2.6-0.tar.gz
-#tar xzf nconf-1.2.6-0.tar.gz
-#mv /opt/nconf-1.2.6-0 /opt/nconf
+#wget http://sourceforge.net/projects/nconf/files/nconf/1.3.0-0/nconf-1.3.0-0.tar.gz
+#tar xzf nconf-1.3.0-0.tar.gz
+#mv /opt/nconf-1.3.0-0 /opt/nconf
 #cd nconf
 # No clue after this - will have to actually run an installation to see...
 
@@ -230,9 +233,9 @@ service httpd reload
 #####################################
 # Package last updated 2011-07-31
 cd /opt/
-wget http://sourceforge.net/projects/nagvis/files/NagVis 1.5/nagvis-1.5.10.tar.gz
-tar xzf nagvis-1.5.10.tar.gz
-mv /opt/nagvis-1.5.10 /opt/nagvis/
+wget http://sourceforge.net/projects/nagvis/files/NagVis 1.7/nagvis-1.7b1.tar.gz
+tar xzf nagvis-1.7b1.tar.gz
+mv /opt/nagvis-1.7b1 /opt/nagvis/
 cd nagvis
 chmod +x install.sh
 ./install.sh
@@ -287,3 +290,16 @@ cp /opt/ozeking/distributions/Fedora/init.d/ozeking /etc/init.d/
 #Clean up downloaded files, etc, here
 cd /opt/
 rm -f rpmforge-release-0.5.2-2.el5.rf.*.rpm
+rm -f webmin-1.580-1.noarch.rpm
+rm -f nagios-3.4.1.tar.gz
+rm -f nagios-plugins-1.4.15.tar.gz
+rm -f nrpe-2.13.tar.gz
+rm -f nsca-2.9.1.tar.gz
+rm -f ndoutils-1.5.1.tar.gz
+rm -f ndoutils1.4b9_light.patch
+rm -f centreon-2.3.8.tar.gz
+rm -f nagiosql_320.tar.gz
+rm -f nconf-1.3.0-0.tar.gz
+rm -f nagvis-1.7b1.tar.gz
+rm -f nareto-1.1.7.tar.bz2
+rm -f OzekiNG_SMS_Gateway-3.15.6.tgz
