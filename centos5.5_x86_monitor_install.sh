@@ -13,6 +13,7 @@
 #																			   #
 # Todo list																	   #
 # - upgrade process															   #
+# -- Add Splunk or PNP4Nagios??												   #
 # -- Make sure all installations work and run without any issue				   #
 # -- Look at adding in for MRTG install to keep files locally				   #
 # -- Look at snmpwalk line...												   #
