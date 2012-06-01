@@ -32,7 +32,7 @@ yum -y update
 yum -y install make
 yum -y install yum-priorities
 
-# Common Linux/Unix Utilities
+# Linux/Unix Utilities
 yum -y install gcc gcc-c++ libstdc++ glib2-devel glibc glibc-common gd gd-devel perl-GD libpng-devel libjpeg-devel
 yum -y install rrdtool fping cpp fontconfig-devel openssl-devel
 yum -y install net-snmp net-snmp-libs net-snmp-utils dmidecode lm_sensors
@@ -51,7 +51,7 @@ yum -y install openssh-server
 # Apache web server
 yum -y install httpd
 
-# PHP and PHP web admin
+# PHP and PHP web admin, etc
 yum -y install php php-gd php-mysql php-pear
 pear channel-update pear.php.net
 #pear config-set http_proxy http://my_proxy.com:port #IF USING A PROXY!!
