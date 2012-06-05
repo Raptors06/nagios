@@ -6,9 +6,9 @@
 # Author: Richard J. Breiten												   #
 #		rbreiten@oplib.org													   #
 #		Ouachita Parish Public Library										   #
-# Updated 2012-05-29														   #
+# Updated 2012-06-05														   #
 ################################################################################
-# Rev: 0.1.1				    											   #
+# Rev: 0.1.5				    											   #
 ################################################################################
 #																			   #
 # Todo list																	   #
@@ -22,8 +22,6 @@
 # -- Look at NaReTo installation											   #
 # -- Clean up files downloaded, etc...										   #
 ################################################################################
-
-LOCATION=/opt
 
 # Update yum repositories
 yum -y update
@@ -53,6 +51,8 @@ yum -y install httpd
 
 # PHP and PHP web admin, etc
 yum -y install php php-gd php-mysql php-pear
+
+####MADE IT TO HERE TESTING####
 pear channel-update pear.php.net
 #pear config-set http_proxy http://my_proxy.com:port #IF USING A PROXY!!
 pear upgrade-all
@@ -65,7 +65,8 @@ yum -y install mysql mysql-server mysql-devel
 chkconfig --add mysqld
 
 #!!!!!!!Will need to check if mysql commands can be used in a batch script like this
-#mysql -u root
+#mysql -u root <<EOFMYSQL
+#EOFMYSQL #--should end MySQL commands...
 
 # Perl plugins
 yum -y install perl-Net-SSLeay perl-Crypt-DES perl-Digest-SHA1 perl-Digest-HMAC perl-Socket6 perl-IO-Socket-INET6
