@@ -38,7 +38,7 @@ Perl and other dependencies
 
 h2. Usage
 
-Just run the script. Nothing to set, no data to add - it should all be automatic for you. Depending on how up to date your installation is, this might take a considerable amount of time to run and complete.
+Just run the script. The only thing the script will ask is a password you would like to set for the users 'nagios' and 'nagiosadmin'. These are set up for administration of the local nagios install as well as the web interface. Depending on how up to date your installation is, this might take a considerable amount of time to run and complete.
 
 h2. To Do
 
@@ -54,3 +54,12 @@ Still need to actually finish the installation script
 @9@ Clean up files downloaded, script particulars, add in user options, etc...
 @10@Add an option to allow user to select which overlay and configuration utility?
 @11@I don't know - suggestions???
+@12@Add in MySQL commands to add users, databases, etc
+@13@Look at NDOUtils install and use yum install isntead?
+@14@Installation of Observium, Munin, and/or Spiceworks?
+@15@
+
+h2. Completed
+
+@1@ Dependencies, etc, should all be correct and at the correct versionings
+@2@ 
