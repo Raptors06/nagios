@@ -6,13 +6,12 @@
 # Author: Richard J. Breiten												   #
 #		rbreiten@oplib.org													   #
 #		Ouachita Parish Public Library										   #
-# Updated 2012-06-05														   #
+# Updated 2012-06-11														   #
 ################################################################################
-# Rev: 0.1.5				    											   #
+# Rev: 0.1.8				    											   #
 ################################################################################
 #																			   #
 # Todo list																	   #
-# - upgrade process															   #
 # -- Add Splunk or PNP4Nagios??												   #
 # -- Make sure all installations work and run without any issue				   #
 # -- Look at adding in for MRTG install to keep files locally				   #
@@ -22,6 +21,15 @@
 # -- Look at NaReTo installation											   #
 # -- Clean up files downloaded, etc...										   #
 ################################################################################
+
+cd /opt/
+# RPMForge 0.5.2-2 -- Updated 2010-11-13
+wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el5.rf.i386.rpm
+rpm -K rpmforge-release-0.5.2-2.el5.rf.*.rpm
+rpm -i rpmforge-release-0.5.2-2.el5.rf.*.rpm
+
+# Extra Packages for Enterprise Linux (EPEL)
+rpm -ivh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-7.noarch.rpm
 
 # Update yum repositories
 yum -y update
@@ -37,12 +45,6 @@ yum -y install net-snmp net-snmp-libs net-snmp-utils dmidecode lm_sensors
 
 rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt
 
-cd /opt/
-# RPMForge 0.5.2-2 -- Updated 2010-11-13
-wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el5.rf.i386.rpm
-rpm -K rpmforge-release-0.5.2-2.el5.rf.*.rpm
-rpm -i rpmforge-release-0.5.2-2.el5.rf.*.rpm
-
 # OpenSSH server for remote access
 yum -y install openssh-server
 
@@ -50,30 +52,43 @@ yum -y install openssh-server
 yum -y install httpd
 
 # PHP and PHP web admin, etc
-yum -y install php php-gd php-mysql php-pear
+yum -y install php php-gd php-mysql php-pear php-date php-mail-mime php-net-smtp php-net-socket php5-xmlrpc
 
-####MADE IT TO HERE TESTING####
 pear channel-update pear.php.net
 #pear config-set http_proxy http://my_proxy.com:port #IF USING A PROXY!!
+pear install -o -f -alldeps DB_DataObject DB_DataObject_FormBuilder MDB2 Numbers_Roman
+pear install -o -f -alldeps Numbers_Words HTML_Common HTML_QuickForm2 HTML_QuickForm_advmultiselect HTML_Table Auth_SASL
+pear install -o -f -alldeps HTTP Image_Canvas Image_Color Image_Graph Image_GraphViz Net_Traceroute Net_Ping Validate XML_RPC
+pear install -o -f -alldeps SOAP
 pear upgrade-all
-yum -y install php-ldap php-xml php-mbstring php-snmp
+yum -y install php-ldap php-xml php-mbstring php-snmp php-mcrypt
 yum -y install phpmyadmin
 
 # Assorted MySQL binaries
 yum -y install mysql mysql-server mysql-devel
 /etc/init.d/mysqld start
 chkconfig --add mysqld
+#yum -y install ndoutils-mysql ##<<--Better way of installing NDOUtils?##
 
 #!!!!!!!Will need to check if mysql commands can be used in a batch script like this
-#mysql -u root <<EOFMYSQL
+#mysql -u root
+#create database nagios;
+#GRANT ALL ON nagios.* TO nagios@localhost IDENTIFIED BY "nagios";
+#FLUSH PRIVILEGES;
+#quit
+#<<EOFMYSQL
 #EOFMYSQL #--should end MySQL commands...
 
 # Perl plugins
 yum -y install perl-Net-SSLeay perl-Crypt-DES perl-Digest-SHA1 perl-Digest-HMAC perl-Socket6 perl-IO-Socket-INET6
-yum -y install perl-DBI perl-DBD-MySQL perl-Config-IniFiles perl-rrdtool
+yum -y install perl-Net-SNMP net-snmp-perl perl-DBI perl-DBD-MySQL perl-Config-IniFiles perl-rrdtool
+
+# Other Apps
+yum -y install fping graphviz 
 
 cd /usr/src
 # Webmin 1.580 -- Updated 2012-01-22
+# This will allow modifications to OS through http://ip-address:10000
 wget http://sourceforge.net/projects/webadmin/files/webmin/1.580/webmin-1.580-1.noarch.rpm
 rpm -i webmin-1.580-1.noarch.rpm
 
@@ -85,39 +100,27 @@ yum -y install ethereal
 
 service snmpd start
 chkconfig snmpd on
-# oppl and localhost names will be the SNMP strings that will be searched - you 
-# will need to change as needed
-# Does not currently work at the moment...
-# snmpwalk -v 1 -c oppl localhost IP-MIB::ipAdEntIfIndex
+
+###Does not currently work at the moment...###
+# snmpwalk -v 1 -c oppl localhost IP-MIB::ipAdEntIfIndex ###<<-- THIS DOES NOT WORK!###
 
 #########################################
 # -- Beginning of Nagios Installation-- #
 #########################################
-# useradd -m nagios
-# passwd nagios
-# groupadd nagmon
-# /usr/sbin/usermod -L nagios
-# /usr/sbin/groupadd nagcmd
-# /usr/sbin/usermod -G nagios,nagcmd nagios
-# /usr/sbin/usermod -G nagios,nagcmd apache
-
-#useradd -m nagios
-#passwd nagios
-#groupadd nagmon
-#usermod -a -G nagmon nagios
-#usermod -a -G nagmon apache
 
 # Nagios 3.4.1 -- Package last updated 2011-05-14
-#Maybe just use yum install nagios??? Would this be advisable? Will have to see - FAN uses a different mirror...
+#Maybe just use yum to install nagios??? Would this be advisable? Will have to see - FAN uses a different mirror...
 
 # mkdir /opt/Nagios
 # cd /opt/Nagios
 cd /opt/
 wget http://sourceforge.net/projects/nagios/files/nagios-3.x/nagios-3.4.1/nagios-3.4.1.tar.gz
 tar xzvf nagios-3.4.1.tar.gz
-mv /opt/nagios-3.4.1/ /opt/nagios/
 cd nagios
-./configure --with-command-group=nagmon --enable-nanosleep --enable-event-broker
+./configure --enable-embedded-perl --prefix=/usr/local/nagios --with-cgiurl=/nagios/cgi-bin --with-htmurl=/nagios/ --enable-nanosleep --enable-event-broker
+useradd -m nagios
+passwd nagios
+##Here you will be asked to enter a password for the user "nagios"##
 make all
 make install
 make install-init
@@ -125,7 +128,13 @@ make install-config
 make install-commandmode
 make install-webconf
 htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+##Here you will be asked to enter a pssword for the user "nagiosadmin"##
 service httpd restart
+service nagios restart
+chkconfig --add httpd
+chkconfig --level 35 httpd on
+chkconfig --add nagios
+chkconfig --level 35 httpd on
 
 ####################################
 # ---Nagios Plugin Installation--- #
@@ -137,10 +146,10 @@ yum -y install samba-client libsmbclient
 cd /opt/
 wget http://sourceforge.net/projects/nagiosplug/files/nagiosplug/1.4.15/nagios-plugins-1.4.15.tar.gz
 tar xvf nagios-plugins-1.4.15.tar.gz
-mv /opt/nagios-plugins-1.4.15/ /opt/nagios-plugins
+mv /opt/nagios-plugins-1.4.15/ /opt/nagios-plugins/
 cd nagios-plugins
-./configure --with-nagios-user=nagios --with-nagios-group=nagmon --with-openssl=/usr/bin/openssl --enable-perl-modules
-make
+./configure --prefix=/usr/local/nagios --with-nagios-user=nagios --with-openssl=/usr/bin/openssl --enable-perl-modules
+make all
 make install
 
 # Plugin #2 - NRPE 2.13 -- Package last updated 2011-11-11
@@ -158,11 +167,10 @@ make install-plugin
 cd /opt/
 wget http://sourceforge.net/projects/nagios/files/nsca-2.x/nsca-2.9.1/nsca-2.9.1.tar.gz
 tar xvf nsca-2.9.1.tar.gz
-mv /opt/nsca-2.9.1/ /opt/nsca
+mv /opt/nsca-2.9.1/ /opt/nsca/
 cd nsca
-#./configure
-#make all
-#make install-plugin
+./configure
+make all
 
 
 ######################################
@@ -174,22 +182,21 @@ wget http://prdownloads.sourceforge.net/sourceforge/nagios/ndoutils-1.5.1.tar.gz
 tar xzf ndoutils-1.5.1.tar.gz
 mv /opt/ndoutils-1.5.1/ /opt/ndoutils
 cd ndoutils
-#!!!WILL NEED TO CHECK SINCE VERSION HAS INCREMENTED!!!
-#less README
-#wget http://svn.centreon.com/trunk/ndoutils-patch/ndoutils1.4b9_light.patch
-#patch -p1 -N < ndoutils1.4b9_light.patch
-#less README
-./configure --prefix=/opt/nagios/ --enable-mysql --disable-pgsql \ --with-ndo2db-user=nagios --with-ndo2db-group=nagios
+./configure --prefix=/usr/local/nagios/ --enable-mysql --disable-pgsql --with-ndo2db-user=nagios --with-ndo2db-group=nagios
 make
-cp ./src/ndomod-3x.o /opt/nagios/bin/ndomod.o
-cp ./src/ndo2db-3x /opt/nagios/bin/ndo2db
-cp ./config/ndo2db.cfg-sample /opt/nagios/etc/ndo2db.cfg
-cp ./config/ndomod.cfg-sample /opt/nagios/etc/ndomod.cfg
-sudo chmod 774 /opt/nagios/bin/ndo*
-sudo chown nagios:nagios /opt/nagios/bin/ndo*
+cp ./src/ndomod-3x.o /usr/local/nagios/bin/ndomod.o
+cp ./src/ndo2db-3x /usr/local/nagios/bin/ndo2db
+cp ./config/ndo2db.cfg-sample /usr/local/nagios/etc/ndo2db.cfg
+cp ./config/ndomod.cfg-sample /usr/local/nagios/etc/ndomod.cfg
+sudo chmod 774 /usr/local/nagios/bin/ndo*
+sudo chown nagios:nagios /usr/local/nagios/bin/ndo*
 cp ./daemon-init /etc/init.d/ndo2db
 chmod +x /etc/init.d/ndo2db
 chkconfig --add ndo2db
+service ndo2db status
+service ndo2db start
+/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+/etc/init.d/nagios restart
 
 
 #######################################
@@ -208,6 +215,9 @@ chkconfig --add ndo2db
 #    the Centreon web front, CentCore, Centreon Nagios Plugins, and SNMP
 #    Traps process.  Additionally, locations of directories, etc, will
 #    need to be input, beginning with the Centreon Web interface.
+#One thing I will note is that the RRD perl module is installed at /usr/lib/perl5/vendor_perl/5.8.8/i386-linux-thread-multi/RRDs.pm
+#Also, PEAR.php is located, by default, in /usr/share/pear/PEAR.php
+#And, if needed for whatever reason, NDO is at /usr/local/nagios/bin/ndomod.o
 
 # Option 2 - NagiosQL 3.2.0 -- Package last updated 2012-04-26
 #pear install HTML_Template_IT
@@ -288,6 +298,7 @@ cp /opt/ozeking/distributions/Fedora/init.d/ozeking /etc/init.d/
 /etc/init.d/centstorage status
 /etc/init.d/nagios status
 /etc/init.d/snmpd status
+/etc/init.d/httpd status
 
 #Clean up downloaded files, etc, here
 cd /opt/
