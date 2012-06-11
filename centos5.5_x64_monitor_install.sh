@@ -20,19 +20,22 @@
 # -- Look at NConf installation												   #
 # -- Look at NaReTo installation											   #
 ################################################################################
-LOCATION=/opt
-
-yum -y update
-yum -y make
-yum -y install yum-priorities
-
-rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt
 
 cd /opt/
 # RPMForge 0.5.2-2 -- Updated 2010-11-13
 wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el5.rf.x86_64.rpm
 rpm -K rpmforge-release-0.5.2-2.el5.rf.*.rpm
 rpm -i rpmforge-release-0.5.2-2.el5.rf.*.rpm
+
+# Extra Packages for Enterprise Linux (EPEL)
+rpm -ivh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-7.noarch.rpm
+
+yum -y update
+yum -y make
+
+yum -y install yum-priorities
+
+rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt
 
 yum -y install openssh-server
 
