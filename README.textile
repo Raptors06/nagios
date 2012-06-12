@@ -2,7 +2,7 @@ An install script, automating installation of monitoring packages and script for
 
 h2. Setup
 
-@monitor_install_x86@ should work with any recent installation of Red Hat, CentOS, or RPM-based Linux distro.
+@monitor_install_x86@ should work with any 32-bit recent installation of Red Hat, CentOS, or RPM-based Linux distro.
 
 h3. Automatic installation
 
@@ -52,11 +52,11 @@ Still need to actually finish the installation script
 @7@ Look at NConf installation
 @8@ Translate NaReTo stuff to figure it out
 @9@ Clean up files downloaded, script particulars, add in user options, etc...
-@10@Add an option to allow user to select which overlay and configuration utility?
-@11@I don't know - suggestions???
-@12@Add in MySQL commands to add users, databases, etc
-@13@Look at NDOUtils install and use yum install isntead?
-@14@Installation of Observium, Munin, and/or Spiceworks?
+@10@ Add an option to allow user to select which overlay and configuration utility?
+@11@ I don't know - suggestions???
+@12@ Add in MySQL commands to add users, databases, etc
+@13@ Look at NDOUtils install and use yum install isntead?
+@14@ Installation of Observium, Munin, and/or Spiceworks?
 @15@
 
 h2. Completed
