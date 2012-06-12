@@ -273,6 +273,44 @@ service nagios start
 
 #yum -y install cacti
 
+####################################
+# ---Cisco MRTG Router Graphing--- #
+####################################
+# Version 2.17.4 Package last updated 2012-01-12
+cd /opt/
+#Install MRTG dependencies first
+wget http://www.zlib.net/zlib-1.2.6.tar.gz
+gunzip -c zlib-1.2.10.tar.gz | tar xf -
+mv zlib-1.2.10/ zlib/
+cd zlib
+./configure --prefix=/opt/zlib/
+make
+cd ..
+wget ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.2.49.tar.gz
+gunzip -c libpng-1.2.49.tar.gz | tar xf -
+mv libpng-1.2.49/ libpng/
+cd libpng
+env CFLAGS="-O3 -fPIC" LDFLAGS="-L=/opt/zlib/" ./configure --prefix=$INSTALL_DIR
+make
+rm *.so.* *.so
+cd ..
+wget http://www.boutell.com/gd/http/gd-2.0.33.tar.gz
+gunzip -c gd-2.0.33.tar.gz | tar xf -
+mv gd-2.0.33/ gd/
+cd gd
+env CPPFLAGS="I../zlib -I../libpng" LDFLAGS="-L../zlib -L../libpng" ./configure --disable-shared --without-freetype --without-jpeg
+make
+cd ..
+cd /opt/
+wget http://oss.oetiker.ch/mrtg/pub/mrtg-2.17.4.tar.gz
+gunzip -c mrtg-2.17.4.tar.gz | tar xvf -
+mv mrtg-2.17.4/ mrtg/
+cd mrtg
+./configure --prefix=/opt/mrtg --with-gd=/opt/gd --with-z=/opt/zlib --with-png=/opt/libpng
+make
+
+
+
 ###############################
 # ---Ozeki NG SMS Delivery--- #
 ###############################
@@ -316,3 +354,5 @@ rm -f nconf-1.3.0-0.tar.gz
 rm -f nagvis-1.7b1.tar.gz
 rm -f nareto-1.1.7.tar.bz2
 rm -f OzekiNG_SMS_Gateway-3.15.6.tgz
+rm -f zlib-1.2.10.tar.gz
+rm -f libpng-1.2.49.tar.gz
