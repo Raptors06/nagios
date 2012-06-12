@@ -45,21 +45,20 @@ h2. To Do
 Still need to actually finish the installation script
 @1@ Finish adding packages (Cacti, Splunk, PNP4Nagios, etc) to the install script
 @2@ Make sure all installations work and run without any issue
-@3@ Look at adding in for MRTG install to keep files locally
-@4@ Look at snmpwalk line - I'm not sure I did this correctly
-@5@ Look at Centreon installation since version has incremented a time or two
-@6@ Look at NagiosQL installation and work out any kinks
-@7@ Look at NConf installation
-@8@ Translate NaReTo stuff to figure it out
-@9@ Clean up files downloaded, script particulars, add in user options, etc...
-@10@ Add an option to allow user to select which overlay and configuration utility?
-@11@ I don't know - suggestions???
-@12@ Add in MySQL commands to add users, databases, etc
-@13@ Look at NDOUtils install and use yum install isntead?
-@14@ Installation of Observium, Munin, and/or Spiceworks?
-@15@
+@3@ Look at snmpwalk line - I'm not sure I did this correctly
+@4@ Look at Centreon installation since version has incremented a time or two
+@5@ Look at NagiosQL installation and work out any kinks
+@6@ Look at NConf installation
+@7@ Translate NaReTo stuff to figure it out
+@8@ Clean up files downloaded, script particulars, add in user options, etc...
+@9@ Add an option to allow user to select which overlay and configuration utility?
+@10@ I don't know - suggestions???
+@11@ Add in MySQL commands to add users, databases, etc
+@12@ Look at NDOUtils install and use yum install isntead?
+@13@ Installation of Observium, Munin, and/or Spiceworks?
+@14@ 
 
 h2. Completed
 
 @1@ Dependencies, etc, should all be correct and at the correct versionings
-@2@ 
+@2@ MRTG 2.17.4 installation and dependencies is proven to work
