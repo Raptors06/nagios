@@ -1,0 +1,65 @@
+An install script, automating installation of monitoring packages and script for network devices
+
+h2. Setup
+
+@monitor_install_x86@ should work with any recent installation of Red Hat, CentOS, or RPM-based Linux distro.
+
+h3. Automatic installation
+
+You can run this script via the command line with no issues. All packages and respositores will be installed in the @/opt/@ directory.
+
+h4. Installed Packages
+
+Perl and other dependencies
+@RPMForge 0.5.2-2@
+@Apache@
+@PHP@
+@PEAR@
+@PHPMyAdmin@
+@MySQL@
+@Webmin 1.580@
+@NMAP@
+@Ethereal@
+@Nagios 3.4.1@
+@Nagios Plugin 1.4.15@
+@NRPE 2.13@
+@NSCA 2.9.1@
+@NDOUtils 1.5.1@
+@Centreon 2.3.8@
+@NagiosQL 3.2.0@
+@NConf 1.3.0-0@
+@NagVis 1.7b1@
+@Nareto 1.1.7@
+@Cacti@
+@Ozeki NG SMS Delivery@
+@Cisco MRTG Logging@
+@Splunk@
+@PNP4Nagios@
+
+h2. Usage
+
+Just run the script. The only thing the script will ask is a password you would like to set for the users 'nagios' and 'nagiosadmin'. These are set up for administration of the local nagios install as well as the web interface. Depending on how up to date your installation is, this might take a considerable amount of time to run and complete.
+
+h2. To Do
+
+Still need to actually finish the installation script
+@1@ Finish adding packages (Cacti, Splunk, PNP4Nagios, etc) to the install script
+@2@ Make sure all installations work and run without any issue
+@3@ Look at adding in for MRTG install to keep files locally
+@4@ Look at snmpwalk line - I'm not sure I did this correctly
+@5@ Look at Centreon installation since version has incremented a time or two
+@6@ Look at NagiosQL installation and work out any kinks
+@7@ Look at NConf installation
+@8@ Translate NaReTo stuff to figure it out
+@9@ Clean up files downloaded, script particulars, add in user options, etc...
+@10@Add an option to allow user to select which overlay and configuration utility?
+@11@I don't know - suggestions???
+@12@Add in MySQL commands to add users, databases, etc
+@13@Look at NDOUtils install and use yum install isntead?
+@14@Installation of Observium, Munin, and/or Spiceworks?
+@15@
+
+h2. Completed
+
+@1@ Dependencies, etc, should all be correct and at the correct versionings
+@2@ 
