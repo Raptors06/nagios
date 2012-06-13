@@ -52,7 +52,7 @@ yum -y install openssh-server
 yum -y install httpd
 
 # PHP and PHP web admin, etc
-yum -y install php php-gd php-mysql php-pear php-date php-mail-mime php-net-smtp php-net-socket php5-xmlrpc
+yum -y install php php-gd php-mysql php-pear php-date php-mail-mime php-net-smtp php-net-socket php5-xmlrpc php-imap
 
 pear channel-update pear.php.net
 #pear config-set http_proxy http://my_proxy.com:port #IF USING A PROXY!!
@@ -327,6 +327,23 @@ iptables -I INPUT -p tcp --dport 9501 -j ACCEPT
 cp /opt/ozeking/distributions/Fedora/init.d/ozeking /etc/init.d/
 /etc/init.d/ozeking start
 
+##################################################
+# ---Postfix Admin - A GUI-based Postfix Tool--- #
+##################################################
+#mysql
+#CREATE DATABASE postfix;
+#CREATE USER 'user'@'LOCALHOST' IDENTIFIED BY 'password';
+#GRANT ALL PRIVILEGES ON 'postfix' . * TO 'user'@'LOCALHOST';
+#<<EOFMYSQL
+cd /opt/
+wget http://sourceforge.net/projects/postfixadmin/files/postfixadmin/postfixadmin/postfixadmin-2.3.5.tar.gz
+tar xvzf postfixadmin-2.3.5.tar.gz
+mv postfixadmin-2.3.5/ /var/www/html/postfixadmin/
+#You MUST edit the config.inc.php file within the postfixadmin/. This required password input, etc.
+#See this link - http://tek.io/M4cBJU - for more information on setting up postfixadmin.
+/etc/init.d/httpd restart
+
+
 ######################################
 # ---Finalization check of Nagios--- #
 ######################################
@@ -356,3 +373,4 @@ rm -f nareto-1.1.7.tar.bz2
 rm -f OzekiNG_SMS_Gateway-3.15.6.tgz
 rm -f zlib-1.2.10.tar.gz
 rm -f libpng-1.2.49.tar.gz
+rm -f postfixadmin-2.3.5.tar.gz
