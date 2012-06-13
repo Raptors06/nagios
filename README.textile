@@ -35,6 +35,7 @@ Perl and other dependencies
 @Cisco MRTG Logging@
 @Splunk@
 @PNP4Nagios@
+@PostfixAdmin@
 
 h2. Usage
 
@@ -62,3 +63,4 @@ h2. Completed
 
 @1@ Dependencies, etc, should all be correct and at the correct versionings
 @2@ MRTG 2.17.4 installation and dependencies is proven to work
+@3@ Added PostfixAdmin GUI to ease Postfix administration
