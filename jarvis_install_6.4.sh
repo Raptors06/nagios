@@ -23,6 +23,8 @@
 
 cd /opt/
 
+rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt
+
 echo 'Installing RPMForge 0.5.3-1';
 # RPMForge 0.5.3-1 -- Updated 20-Mar-2013
 wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
@@ -47,8 +49,6 @@ yum -y install g++ libc-dev gcc gcc-c++ libstdc++ glib2-devel glibc glibc-common
 yum -y install rrdtool fping cpp fontconfig-devel openssl-devel
 yum -y install net-snmp net-snmp-libs net-snmp-utils dmidecode lm_sensors
 yum -y install sharutils #required to send email attachments
-
-rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt
 
 # OpenSSH server for remote access
 yum -y install openssh-server
